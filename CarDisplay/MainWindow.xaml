@@ -1,0 +1,380 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:CarDisplay"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" x:Class="CarDisplay.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        d:DataContext="{d:DesignInstance local:MainWindowViewModel}"
+        Height="600"
+        Width="1000">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <ComboBox Width="100"
+                      Margin="10,0,0,0"
+                      DisplayMemberPath="Name"
+                      ItemsSource="{Binding Brands,Mode=OneWay}"
+                      SelectedItem="{Binding SelectedBrand,Mode=OneWayToSource}">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+                <!--<i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectBrandCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>-->
+            </ComboBox>
+            <ComboBox Width="100"
+                      Margin="10,0,0,0"
+                      DisplayMemberPath="Name"
+                      ItemsSource="{Binding Series,Mode=OneWay}"
+                      SelectedItem="{Binding SelectedSeries,Mode=OneWayToSource}">
+                <!--<i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectSeriesCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>-->
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <ComboBox Width="140"
+                      Margin="10,0,0,0"
+                      DisplayMemberPath="Name"
+                      ItemsSource="{Binding Models,Mode=OneWay}"
+                      SelectedItem="{Binding SelectedModel,Mode=OneWayToSource}">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <ComboBox Width="270"
+                      Margin="10,0,0,0"
+                      DisplayMemberPath="Name"
+                      ItemsSource="{Binding SubModels,Mode=OneWay}"
+                      SelectedItem="{Binding SelectedSubModel,Mode=OneWayToSource}">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <Button Width="120"
+                    FontSize="16"
+                    Margin="10,0,0,0"
+                    Command="{Binding AddModelCommand}"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    Content="添加" />
+            <CheckBox Content="隐藏相同项"
+                      Margin="10,0,0,0"
+                      CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=IsChecked}"
+                      Command="{Binding HidePropertyCommand}" />
+        </StackPanel>
+        <ScrollViewer Grid.Row="1"
+                      Margin="10"
+                      VerticalScrollBarVisibility="Disabled"
+                      HorizontalScrollBarVisibility="Auto">
+            <!--<ListView x:Name="ListView">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="名称"
+                                        Width="200"></GridViewColumn>
+                        <GridViewColumn Header="参考价"></GridViewColumn>
+                        <GridViewColumn Header="厂商"></GridViewColumn>
+                        <GridViewColumn Header="级别"></GridViewColumn>
+                        <GridViewColumn Header="能源类型"></GridViewColumn>
+                        <GridViewColumn Header="上市时间"></GridViewColumn>
+                        <GridViewColumn Header="最大功率"></GridViewColumn>
+                        <GridViewColumn Header="最大扭矩"></GridViewColumn>
+                        <GridViewColumn Header="发动机"></GridViewColumn>
+                        <GridViewColumn Header="变速箱"></GridViewColumn>
+                        <GridViewColumn Header="长*宽*高"></GridViewColumn>
+                        <GridViewColumn Header="车身结构"></GridViewColumn>
+                        <GridViewColumn Header="最高车速"></GridViewColumn>
+                        <GridViewColumn Header="官方0-100km/h加速(s)"></GridViewColumn>
+                        <GridViewColumn Header="实测0-100km/h加速(s)"></GridViewColumn>
+                        <GridViewColumn Header="实测100-0km/h制动(m)"></GridViewColumn>
+                        <GridViewColumn Header="实测离地间隙(mm)"></GridViewColumn>
+                        <GridViewColumn Header="工信部综合油耗(L/100km)"></GridViewColumn>
+                        <GridViewColumn Header="实测油耗(L/100km)"></GridViewColumn>
+                        <GridViewColumn Header="整车质保"></GridViewColumn>
+                        <GridViewColumn Header="车身"></GridViewColumn>
+                        <GridViewColumn Header="宽度(mm"></GridViewColumn>
+                        <GridViewColumn Header="高度(mm)"></GridViewColumn>
+                        <GridViewColumn Header="轴距(mm)"></GridViewColumn>
+                        <GridViewColumn Header="前轮距(mm)"></GridViewColumn>
+                        <GridViewColumn Header="后轮距(mm)"></GridViewColumn>
+                        <GridViewColumn Header="最小离地间隙(mm)"></GridViewColumn>
+                        <GridViewColumn Header="车身结构"></GridViewColumn>
+                        <GridViewColumn Header="车门数(个"></GridViewColumn>
+                        <GridViewColumn Header="座位数(个)"></GridViewColumn>
+                        <GridViewColumn Header="油箱容积(L)"></GridViewColumn>
+                        <GridViewColumn Header="行李厢容积(L)"></GridViewColumn>
+                        <GridViewColumn Header="整备质量(kg)"></GridViewColumn>
+                        <GridViewColumn Header="发动机型号"></GridViewColumn>
+                        <GridViewColumn Header="排量(mL)"></GridViewColumn>
+                        <GridViewColumn Header="排量(L)"></GridViewColumn>
+                        <GridViewColumn Header="进气形式"></GridViewColumn>
+                        <GridViewColumn Header="气缸排列形式"></GridViewColumn>
+                        <GridViewColumn Header="气缸数(个)"></GridViewColumn>
+                        <GridViewColumn Header="每缸气门数(个)"></GridViewColumn>
+                        <GridViewColumn Header="压缩比"></GridViewColumn>
+                        <GridViewColumn Header="配气机构"></GridViewColumn>
+                        <GridViewColumn Header="缸径(mm)"></GridViewColumn>
+                        <GridViewColumn Header="行程(mm)"></GridViewColumn>
+                        <GridViewColumn Header="最大马力(Ps)"></GridViewColumn>
+                        <GridViewColumn Header="最大功率(kW)"></GridViewColumn>
+                        <GridViewColumn Header="最大功率转速(rpm)"></GridViewColumn>
+                        <GridViewColumn Header="最大扭矩(N·m)"></GridViewColumn>
+                        <GridViewColumn Header="最大扭矩转速(rpm)"></GridViewColumn>
+                        <GridViewColumn Header="发动机特有技术"></GridViewColumn>
+                        <GridViewColumn Header="燃料形式"></GridViewColumn>
+                        <GridViewColumn Header="燃油标号"></GridViewColumn>
+                        <GridViewColumn Header="供油方式"></GridViewColumn>
+                        <GridViewColumn Header="缸盖材料"></GridViewColumn>
+                        <GridViewColumn Header="缸体材料"></GridViewColumn>
+                        <GridViewColumn Header="环保标准"></GridViewColumn>
+                        <GridViewColumn Header="挡位个数"></GridViewColumn>
+                        <GridViewColumn Header="变速箱类型"></GridViewColumn>
+                        <GridViewColumn Header="简称"></GridViewColumn>
+                        <GridViewColumn Header="驱动方式"></GridViewColumn>
+                        <GridViewColumn Header="四驱形式)"></GridViewColumn>
+                        <GridViewColumn Header="中央差速器结构"></GridViewColumn>
+                        <GridViewColumn Header="前悬架类型"></GridViewColumn>
+                        <GridViewColumn Header="后悬架类型"></GridViewColumn>
+                        <GridViewColumn Header="助力类型"></GridViewColumn>
+                        <GridViewColumn Header="车体结构"></GridViewColumn>
+                        <GridViewColumn Header="前制动器类型"></GridViewColumn>
+                        <GridViewColumn Header="后制动器类型"></GridViewColumn>
+                        <GridViewColumn Header="驻车制动类型"></GridViewColumn>
+                        <GridViewColumn Header="前轮胎规格"></GridViewColumn>
+                        <GridViewColumn Header="后轮胎规格"></GridViewColumn>
+                        <GridViewColumn Header="备胎规格"></GridViewColumn>
+                        <GridViewColumn Header="主/副驾驶座安全气囊"></GridViewColumn>
+                        <GridViewColumn Header="前/后排侧气囊"></GridViewColumn>
+                        <GridViewColumn Header="前/后排头部气囊(气帘)"></GridViewColumn>
+                        <GridViewColumn Header="膝部气囊"></GridViewColumn>
+                        <GridViewColumn Header="胎压监测装置"></GridViewColumn>
+                        <GridViewColumn Header="零胎压继续行驶"></GridViewColumn>
+                        <GridViewColumn Header="安全带未系提示"></GridViewColumn>
+                        <GridViewColumn Header="ISOFIX儿童座椅接口"></GridViewColumn>
+                        <GridViewColumn Header="ABS防抱死"></GridViewColumn>
+                        <GridViewColumn Header="制动力分配(EBD/CBC等)"></GridViewColumn>
+                        <GridViewColumn Header="刹车辅助(EBA/BAS/BA等)"></GridViewColumn>
+                        <GridViewColumn Header="牵引力控制(ASR/TCS/TRC等)"></GridViewColumn>
+                        <GridViewColumn Header="车身稳定控制(ESC/ESP/DSC等)"></GridViewColumn>
+                        <GridViewColumn Header="并线辅助"></GridViewColumn>
+                        <GridViewColumn Header="车道偏离预警系统"></GridViewColumn>
+                        <GridViewColumn Header="主动刹车/主动安全系统"></GridViewColumn>
+                        <GridViewColumn Header="夜视系统"></GridViewColumn>
+                        <GridViewColumn Header="疲劳驾驶提示"></GridViewColumn>
+                        <GridViewColumn Header="前/后驻车雷达"></GridViewColumn>
+                        <GridViewColumn Header="倒车视频影像"></GridViewColumn>
+                        <GridViewColumn Header="全景摄像头"></GridViewColumn>
+                        <GridViewColumn Header="定速巡航"></GridViewColumn>
+                        <GridViewColumn Header="自适应巡航"></GridViewColumn>
+                        <GridViewColumn Header="自动泊车入位"></GridViewColumn>
+                        <GridViewColumn Header="发动机启停技术"></GridViewColumn>
+                        <GridViewColumn Header="自动驾驶技术"></GridViewColumn>
+                        <GridViewColumn Header="上坡辅助"></GridViewColumn>
+                        <GridViewColumn Header="自动驻车"></GridViewColumn>
+                        <GridViewColumn Header="陡坡缓降"></GridViewColumn>
+                        <GridViewColumn Header="可变悬架"></GridViewColumn>
+                        <GridViewColumn Header="空气悬架"></GridViewColumn>
+                        <GridViewColumn Header="电磁感应悬架"></GridViewColumn>
+                        <GridViewColumn Header="可变转向比"></GridViewColumn>
+                        <GridViewColumn Header="前桥限滑差速器/差速锁"></GridViewColumn>
+                        <GridViewColumn Header="中央差速器锁止功能"></GridViewColumn>
+                        <GridViewColumn Header="桥限滑差速器/差速锁"></GridViewColumn>
+                        <GridViewColumn Header="整体主动转向系统"></GridViewColumn>
+                        <GridViewColumn Header="电动天窗"></GridViewColumn>
+                        <GridViewColumn Header="全景天窗"></GridViewColumn>
+                        <GridViewColumn Header="运动外观套件"></GridViewColumn>
+                        <GridViewColumn Header="铝合金轮圈"></GridViewColumn>
+                        <GridViewColumn Header="电动吸合门"></GridViewColumn>
+                        <GridViewColumn Header="侧滑门"></GridViewColumn>
+                        <GridViewColumn Header="电动后备厢"></GridViewColumn>
+                        <GridViewColumn Header="感应后备厢"></GridViewColumn>
+                        <GridViewColumn Header="车顶行李架"></GridViewColumn>
+                        <GridViewColumn Header="发动机电子防盗"></GridViewColumn>
+                        <GridViewColumn Header="车内中控锁"></GridViewColumn>
+                        <GridViewColumn Header="遥控钥匙"></GridViewColumn>
+                        <GridViewColumn Header="无钥匙启动系统"></GridViewColumn>
+                        <GridViewColumn Header="无钥匙进入系统"></GridViewColumn>
+                        <GridViewColumn Header="远程启动"></GridViewColumn>
+                        <GridViewColumn Header="皮质方向盘"></GridViewColumn>
+                        <GridViewColumn Header="方向盘调节"></GridViewColumn>
+                        <GridViewColumn Header="方向盘电动调节"></GridViewColumn>
+                        <GridViewColumn Header="多功能方向盘"></GridViewColumn>
+                        <GridViewColumn Header="方向盘换挡"></GridViewColumn>
+                        <GridViewColumn Header="方向盘加热"></GridViewColumn>
+                        <GridViewColumn Header="方向盘记忆"></GridViewColumn>
+                        <GridViewColumn Header="行车电脑显示屏"></GridViewColumn>
+                        <GridViewColumn Header="全液晶仪表盘"></GridViewColumn>
+                        <GridViewColumn Header="抬头数字显示"></GridViewColumn>
+                        <GridViewColumn Header="内置行车记录仪"></GridViewColumn>
+                        <GridViewColumn Header="主动降噪"></GridViewColumn>
+                        <GridViewColumn Header="手机无线充电"></GridViewColumn>
+                        <GridViewColumn Header="座椅材质"></GridViewColumn>
+                        <GridViewColumn Header="运动风格座椅"></GridViewColumn>
+                        <GridViewColumn Header="座椅高低调节"></GridViewColumn>
+                        <GridViewColumn Header="腰部支撑调节"></GridViewColumn>
+                        <GridViewColumn Header="肩部支撑调节"></GridViewColumn>
+                        <GridViewColumn Header="主/副驾驶座电动调节"></GridViewColumn>
+                        <GridViewColumn Header="第二排靠背角度调节"></GridViewColumn>
+                        <GridViewColumn Header="第二排座椅移动"></GridViewColumn>
+                        <GridViewColumn Header="后排座椅电动调节"></GridViewColumn>
+                        <GridViewColumn Header="副驾驶位后排可调节按钮"></GridViewColumn>
+                        <GridViewColumn Header="电动座椅记忆"></GridViewColumn>
+                        <GridViewColumn Header="前/后排座椅加热"></GridViewColumn>
+                        <GridViewColumn Header="前/后排座椅通风"></GridViewColumn>
+                        <GridViewColumn Header="前/后排座椅按摩"></GridViewColumn>
+                        <GridViewColumn Header="第二排独立座椅"></GridViewColumn>
+                        <GridViewColumn Header="第三排座椅"></GridViewColumn>
+                        <GridViewColumn Header="后排座椅放倒方式"></GridViewColumn>
+                        <GridViewColumn Header="前/后中央扶手"></GridViewColumn>
+                        <GridViewColumn Header="后排杯架"></GridViewColumn>
+                        <GridViewColumn Header="可加热/制冷杯架"></GridViewColumn>
+                        <GridViewColumn Header="GPS导航系统"></GridViewColumn>
+                        <GridViewColumn Header="定位互动服务"></GridViewColumn>
+                        <GridViewColumn Header="中控台彩色大屏"></GridViewColumn>
+                        <GridViewColumn Header="中控台彩色大屏尺寸"></GridViewColumn>
+                        <GridViewColumn Header="中控液晶屏分屏显示"></GridViewColumn>
+                        <GridViewColumn Header="蓝牙/车载电话"></GridViewColumn>
+                        <GridViewColumn Header="手机互联/映射"></GridViewColumn>
+                        <GridViewColumn Header="车联网"></GridViewColumn>
+                        <GridViewColumn Header="车载电视"></GridViewColumn>
+                        <GridViewColumn Header="后排液晶屏"></GridViewColumn>
+                        <GridViewColumn Header="220V/230V电源"></GridViewColumn>
+                        <GridViewColumn Header="外接音源接口"></GridViewColumn>
+                        <GridViewColumn Header="CD/DVD"></GridViewColumn>
+                        <GridViewColumn Header="扬声器品牌"></GridViewColumn>
+                        <GridViewColumn Header="扬声器数量"></GridViewColumn>
+                        <GridViewColumn Header="近光灯"></GridViewColumn>
+                        <GridViewColumn Header="远光灯"></GridViewColumn>
+                        <GridViewColumn Header="LED日间行车灯"></GridViewColumn>
+                        <GridViewColumn Header="自适应远近光"></GridViewColumn>
+                        <GridViewColumn Header="后排杯自动头灯架"></GridViewColumn>
+                        <GridViewColumn Header="转向辅助灯"></GridViewColumn>
+                        <GridViewColumn Header="转向头灯"></GridViewColumn>
+                        <GridViewColumn Header="前雾灯"></GridViewColumn>
+                        <GridViewColumn Header="大灯高度可调"></GridViewColumn>
+                        <GridViewColumn Header="大灯清洗装置"></GridViewColumn>
+                        <GridViewColumn Header="车内氛围灯"></GridViewColumn>
+                        <GridViewColumn Header="前/后电动车窗"></GridViewColumn>
+                        <GridViewColumn Header="车窗一键升降"></GridViewColumn>
+                        <GridViewColumn Header="车窗防夹手功能"></GridViewColumn>
+                        <GridViewColumn Header="防紫外线/隔热玻璃"></GridViewColumn>
+                        <GridViewColumn Header="后视镜电动调节"></GridViewColumn>
+                        <GridViewColumn Header="后视镜加热"></GridViewColumn>
+                        <GridViewColumn Header="内/外后视镜自动防眩目"></GridViewColumn>
+                        <GridViewColumn Header="流媒体车内后视镜"></GridViewColumn>
+                        <GridViewColumn Header="后视镜电动折叠"></GridViewColumn>
+                        <GridViewColumn Header="后视镜记忆"></GridViewColumn>
+                        <GridViewColumn Header="后风挡遮阳帘"></GridViewColumn>
+                        <GridViewColumn Header="后排侧遮阳帘"></GridViewColumn>
+                        <GridViewColumn Header="后排侧隐私玻璃"></GridViewColumn>
+                        <GridViewColumn Header="遮阳板化妆镜"></GridViewColumn>
+                        <GridViewColumn Header="后雨刷"></GridViewColumn>
+                        <GridViewColumn Header="感应雨刷"></GridViewColumn>
+                        <GridViewColumn Header="空调控制方式"></GridViewColumn>
+                        <GridViewColumn Header="后排独立空调"></GridViewColumn>
+                        <GridViewColumn Header="后座出风口"></GridViewColumn>
+                        <GridViewColumn Header="温度分区控制"></GridViewColumn>
+                        <GridViewColumn Header="车内空气调节/花粉过滤"></GridViewColumn>
+                        <GridViewColumn Header="车载空气净化器"></GridViewColumn>
+                        <GridViewColumn Header="车载冰箱"></GridViewColumn>
+                    </GridView>
+                </ListView.View>
+
+            </ListView>-->
+            <TreeView ItemsSource="{Binding BindingPropertyLists,Mode=OneWay}">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type local:PropertyList}"
+                                              ItemsSource="{Binding PropertyLines}">
+                        <TextBlock Text="{Binding Name}" />
+                    </HierarchicalDataTemplate>
+                    <DataTemplate DataType="{x:Type local:PropertyLine}">
+                        <Grid x:Name="Grid">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Name}"
+                                       Width="150"
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap" />
+                            <ItemsControl Grid.Column="1"
+                                          ItemsSource="{Binding ValueList}"
+                                          x:Name="ItemsControl">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Width="150">
+                                            <TextBlock Text="{Binding}"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       TextWrapping="Wrap"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Name}"
+                                         Value="车型名称">
+                                <Setter TargetName="ItemsControl"
+                                        Property="ItemTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <Grid Width="150">
+                                                <TextBlock Text="{Binding}"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           TextWrapping="Wrap"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                                                        Width="18"
+                                                        Height="18"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Right"
+                                                        Content="{materialDesign:PackIcon Close}"
+                                                        Command="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Window},Path=DataContext.RemoveModelCommand}"
+                                                        CommandParameter="{Binding}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </TreeView.Resources>
+            </TreeView>
+        </ScrollViewer>
+
+    </Grid>
+</Window>
